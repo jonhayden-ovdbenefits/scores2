@@ -1,0 +1,49 @@
+name: Bears TV check (Grand Rapids)
+
+# Reads 506sports.com's NFL coverage maps and saves whether Grand Rapids gets
+# the Bears game to bears-tv.json, which the scoreboard and Jon's Brief read.
+# 506 posts maps on Wednesday and revises them through the weekend.
+
+on:
+  schedule:
+    # Times are UTC (Eastern is UTC-4 until early November, then UTC-5).
+    - cron: "0 22 * * 3"   # Wednesday, about 6 PM ET
+    - cron: "0 22 * * 5"   # Friday, about 6 PM ET
+    - cron: "30 23 * * 6"  # Saturday, about 7:30 PM ET
+    - cron: "0 8 * * 0"    # Sunday, about 4 AM ET, before the morning brief
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bears-tv
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+
+      - name: Check 506sports
+        run: node tools/bears-tv.js --out bears-tv.json
+
+      - name: Save result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git add bears-tv.json
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
+          git commit -m "Bears TV check: $(node -p "require('./bears-tv.json').headline")"
+          git push

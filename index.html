@@ -158,6 +158,10 @@
   .badge.fav { background: var(--accent-soft); color: var(--accent); }
   .sit { font-size: 13px; color: var(--ink); background: var(--surface-2); border-radius: 6px; padding: 4px 8px; }
   .note { font-size: 12px; color: var(--muted); }
+  .local { font-size: 13px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 8px; }
+  .local b { color: var(--ink); font-weight: 600; }
+  .local.out { border-left-color: var(--live); }
+  .local.out b { color: var(--live); }
 
   /* Golf */
   .golf-name { margin: 0; font-family: var(--cond); font-size: 21px; font-weight: 700; line-height: 1.1; }
@@ -252,7 +256,10 @@
 
   /* ---------- State ---------- */
 
-  var state = { dayOffset: 0, data: {}, errors: {}, lastUpdated: null, loading: false, openLeagues: {} };
+  // Weekly check of 506sports.com's coverage maps (see tools/bears-tv.js).
+  var LOCAL_TV_URL = "bears-tv.json";
+
+  var state = { dayOffset: 0, data: {}, errors: {}, lastUpdated: null, loading: false, openLeagues: {}, localTv: null };
   var timer = null;
 
   var $ = function (id) { return document.getElementById(id); };
@@ -320,6 +327,17 @@
     if (!favs || !favs.length) return false;
     var comp = (ev.competitions && ev.competitions[0]) || {};
     return (comp.competitors || []).some(function (c) { return favs.indexOf(teamName(c)) !== -1; });
+  }
+
+  // The Grand Rapids TV check, if it covers this game: same team, season and week.
+  function localTvFor(league, ev) {
+    var t = state.localTv, d = state.data[league.key] || {};
+    if (league.key !== "nfl" || !t || !t.headline) return null;
+    var season = ev.season || d.season || {}, week = ev.week || d.week || {};
+    if (season.type && season.type !== 2) return null;
+    if (t.season !== season.year || t.week !== week.number) return null;
+    var comp = (ev.competitions && ev.competitions[0]) || {};
+    return (comp.competitors || []).some(function (c) { return teamName(c) === t.team; }) ? t : null;
   }
 
   function bigReasons(league, ev) {
@@ -424,6 +442,12 @@
 
     if (st.state === "in" && (sit.downDistanceText || sit.shortDownDistanceText)) {
       card.appendChild(h("div", { className: "sit", text: sit.downDistanceText || sit.shortDownDistanceText }));
+    }
+
+    var local = st.state !== "post" ? localTvFor(league, ev) : null;
+    if (local) {
+      card.appendChild(h("div", { className: "local" + (local.inMarket === false ? " out" : "") },
+        h("b", { text: "Local TV: " }), local.headline));
     }
 
     var tv = [];
@@ -586,9 +610,16 @@
     return API + lg.path + "/scoreboard" + (q.length ? "?" + q.join("&") : "");
   }
 
+  function loadLocalTv() {
+    return fetch(LOCAL_TV_URL, { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (json) { state.localTv = json; }, function () { state.localTv = null; });
+  }
+
   function load() {
     if (state.loading) return Promise.resolve();
     state.loading = true;
+    loadLocalTv().then(render);
     var offsetAtStart = state.dayOffset;
     return Promise.all(LEAGUES.map(function (lg) {
       return fetch(urlFor(lg), { cache: "no-store" })

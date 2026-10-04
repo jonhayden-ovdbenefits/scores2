@@ -1,0 +1,20 @@
+{
+  "market": "Grand Rapids",
+  "team": "Chicago Bears",
+  "checkedAt": "2026-10-04T16:11:35.786Z",
+  "season": 2026,
+  "week": 4,
+  "weekDate": "2026-10-04",
+  "source": "https://506sports.com/nfl.php?yr=2026&wk=4",
+  "status": "regional",
+  "game": "NY Jets @ Chicago",
+  "network": "FOX",
+  "window": "early",
+  "slot": "FOX SINGLE",
+  "station": "FOX 17 (WXMI)",
+  "map": "https://506sports.com/2026/04-FOX-V4.png",
+  "inMarket": false,
+  "confidence": 1,
+  "marketGame": "Green Bay @ Tampa Bay",
+  "headline": "Not on in Grand Rapids. FOX 17 (WXMI) has Green Bay @ Tampa Bay instead."
+}
