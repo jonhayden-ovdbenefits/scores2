@@ -7,6 +7,7 @@ name: Bears TV check (Grand Rapids)
 on:
   schedule:
     # Times are UTC (Eastern is UTC-4 until early November, then UTC-5).
+    - cron: "0 22 * * 2"   # Tuesday, about 6 PM ET (national games are listed before the maps; covers Thursday games)
     - cron: "0 22 * * 3"   # Wednesday, about 6 PM ET
     - cron: "0 22 * * 5"   # Friday, about 6 PM ET
     - cron: "30 23 * * 6"  # Saturday, about 7:30 PM ET
