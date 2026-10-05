@@ -330,9 +330,11 @@
   }
 
   // The Grand Rapids TV check, if it covers this game: same team, season and week.
+  // Only Sunday-afternoon CBS/FOX games vary by market; national games are on everywhere.
   function localTvFor(league, ev) {
     var t = state.localTv, d = state.data[league.key] || {};
     if (league.key !== "nfl" || !t || !t.headline) return null;
+    if (t.status !== "regional" && t.status !== "pending") return null;
     var season = ev.season || d.season || {}, week = ev.week || d.week || {};
     if (season.type && season.type !== 2) return null;
     if (t.season !== season.year || t.week !== week.number) return null;
