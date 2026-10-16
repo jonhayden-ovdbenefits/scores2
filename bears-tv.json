@@ -1,7 +1,7 @@
 {
   "market": "Grand Rapids",
   "team": "Chicago Bears",
-  "checkedAt": "2026-10-14T22:19:49.826Z",
+  "checkedAt": "2026-10-16T22:26:55.383Z",
   "season": 2026,
   "week": 6,
   "weekDate": "2026-10-18",
@@ -12,7 +12,7 @@
   "window": "early",
   "slot": "FOX SINGLE",
   "station": "FOX 17 (WXMI)",
-  "map": "https://506sports.com/2026/06-FOX.png",
+  "map": "https://506sports.com/2026/06-FOX-V2.png",
   "inMarket": true,
   "confidence": 1,
   "marketGame": "Chicago @ Atlanta",
