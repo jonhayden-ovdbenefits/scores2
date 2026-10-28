@@ -1,16 +1,16 @@
 {
   "market": "Grand Rapids",
   "team": "Chicago Bears",
-  "checkedAt": "2026-10-24T23:48:19.693Z",
+  "checkedAt": "2026-10-28T22:29:33.710Z",
   "season": 2026,
-  "week": 7,
-  "weekDate": "2026-10-25",
-  "source": "https://506sports.com/nfl.php?yr=2026&wk=7",
+  "week": 8,
+  "weekDate": "2026-11-01",
+  "source": "https://506sports.com/nfl.php?yr=2026&wk=8",
   "status": "national",
-  "game": "New England @ Chicago",
-  "network": "Prime Video",
-  "time": "Thu 8:00 ET",
+  "game": "Chicago @ Seattle",
+  "network": "ESPN",
+  "time": "Mon 8:00 ET",
   "inMarket": true,
-  "streamingOnly": true,
-  "headline": "National game, streaming only on Prime Video. Not on local TV in Grand Rapids."
+  "streamingOnly": false,
+  "headline": "National game on ESPN: on everywhere with cable or a live-TV streaming service."
 }
